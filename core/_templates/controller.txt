@@ -1,0 +1,15 @@
+<?php
+
+class {{ENTITY_NAME}}Controller extends Controller {
+    public $apiName = '{{ENTITY_NAME}}';
+
+    public function indexAction() {}
+
+    public function viewAction() {}
+
+    public function createAction() {}
+
+    public function updateAction() {}
+
+    public function deleteAction() {}
+}

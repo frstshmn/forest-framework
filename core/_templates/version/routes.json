@@ -1,0 +1,16 @@
+{
+
+  "GET": {
+    "/route": "RouteController@method",
+    "/route/{param}": "RouteController@method"
+  },
+  "POST": {
+    "/route": "RouteController@method"
+  },
+  "PUT": {
+    "/route": "RouteController@method"
+  },
+  "DELETE": {
+    "/route": "RouteController@method"
+  }
+}
