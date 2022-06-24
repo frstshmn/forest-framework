@@ -6,14 +6,14 @@ require_once "Command.php";
 class Make extends Command {
 
     protected $entities = array(
-        "version",
-        "model",
-        "controller",
+        "version" => "Creates folder for specified version\n\tExample: php tinker make version 1.0",
+        "model" => "Creates model with specified name in specified version\n\tExample: php tinker make model 1.0 User",
+        "controller" => "Creates controller with specified name in specified version\n\tExample: php tinker make controller 1.0 UserController",
     );
 
-    function __construct ( $target, $version, $value = false ) {
+    function __construct ( $target = null, $version = null, $value = null ) {
 
-        if ( in_array( $target, $this->entities ) ) {
+        if ( array_key_exists( $target, $this->entities ) ) {
             $this->target = $target;
             $this->version = $version;
             $this->value = $value;
