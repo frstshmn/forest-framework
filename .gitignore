@@ -2,3 +2,5 @@
 /api/
 /documentation/
 config.json
+
+!core/_templates/config.json
