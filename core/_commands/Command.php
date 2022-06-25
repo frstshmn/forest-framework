@@ -6,9 +6,19 @@ abstract class Command {
     protected $version;
     protected $value;
 
+    function __construct ( $target = null, $version = null, $value = null ) {
+
+        if ( array_key_exists( $target, $this->entities ) ) {
+            $this->target = $target;
+            $this->version = $version;
+            $this->value = $value;
+        }
+
+    }
+
     public function run () {
 
-        if ( in_array( $this->target, $this->entities ) ) {
+        if ( array_key_exists( $this->target, $this->entities ) ) {
             return $this->{$this->target}();
         } else {
             echo "Unknown command, see help below:";

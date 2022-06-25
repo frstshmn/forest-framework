@@ -11,16 +11,6 @@ class Make extends Command {
         "controller" => "Creates controller with specified name in specified version\n\tExample: php tinker make controller 1.0 UserController",
     );
 
-    function __construct ( $target = null, $version = null, $value = null ) {
-
-        if ( array_key_exists( $target, $this->entities ) ) {
-            $this->target = $target;
-            $this->version = $version;
-            $this->value = $value;
-        }
-
-    }
-
     function version () {
         if ( !is_dir( __DIR__ . "/../../api" ) ) {
             mkdir(__DIR__ . "/../../api");
