@@ -1,15 +1,7 @@
 <?php
 
-class {{ENTITY_NAME}}Controller extends Controller {
-    public $apiName = '{{ENTITY_NAME}}';
+require_once "Controller.php";
 
-    public function indexAction() {}
+class {{Entity}}Controller extends Controller {
 
-    public function viewAction() {}
-
-    public function createAction() {}
-
-    public function updateAction() {}
-
-    public function deleteAction() {}
 }

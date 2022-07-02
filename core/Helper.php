@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . "/Core.php";
+
 class Helper {
     protected static $_instance = null;
 
