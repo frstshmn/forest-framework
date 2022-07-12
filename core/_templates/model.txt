@@ -4,39 +4,4 @@ require_once __DIR__ . "/Model.php";
 
 class {{Entity}} extends Model {
 
-    function fetch() {
-        return $this->SQL('SELECT * from `{{entities}}`' );
-    }
-
-    function index( $id ) {
-        return $this->SQL("SELECT * from `{{entities}}` WHERE `id`= '". $id ."'");
-    }
-
-    function create( ${{entity}} ) {
-
-        $fields = implode( ", ", array_keys( ${{entity}} ) );
-        $values = implode( '", "' ,  ${{entity}} );
-
-        return $this->SQL('
-            INSERT INTO `{{entities}}` (' . $fields . ')
-            VALUES ("' . $values . '") ');
-    }
-
-    function update( ${{entity}} ) {
-
-        $values = array();
-        foreach ( ${{entity}} as $key => $value ) {
-            $values[] = $key . ' = "' . $value . '"';
-        }
-
-        return $this->SQL('
-            UPDATE `{{entities}}`
-            SET ' . implode( ', ' ,  $values ) . '
-            WHERE id = ' . ${{entity}}['id'] . '
-            ');
-    }
-
-    function delete( $id ) {
-        return $this->SQL("DELETE FROM `{{entities}}` WHERE `id`= '". $id ."'");
-    }
 }

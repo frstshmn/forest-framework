@@ -1,7 +1,8 @@
 <?php
 
 class DB {
-    private PDO $db;
+    private PDO $pdo;
+    private $database;
     protected static $_instance = null;
 
     public static function instance() {
@@ -12,14 +13,20 @@ class DB {
     }
 
     public function connect( $host, $user, $password, $database, $port = 3306 ) {
-        $this->db = new PDO('mysql:host=' . $host . ';port=' . $port . ';dbname=' . $database, $user, $password);
+        $this->database = $database;
+        $this->pdo = new PDO('mysql:host=' . $host . ';port=' . $port . ';dbname=' . $database, $user, $password);
+    }
+
+    public function get_database() {
+        return $this->database;
     }
 
     public function query( $query ) {
-        $sql = $this->db->prepare( $query );
+        $sql = $this->pdo->prepare( $query );
         $result = $sql->execute();
 
-        if ( strpos( strtoupper( $query ), "SELECT" ) !== 0 ) {
+        $operator = strtok($query, " ");
+        if ( !in_array( $operator, array( "SELECT", "DESCRIBE", "SHOW" ) ) ) {
             return $result;
         } else {
             return $sql->fetchAll(PDO::FETCH_ASSOC);

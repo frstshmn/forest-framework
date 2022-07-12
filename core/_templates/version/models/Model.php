@@ -1,44 +1,78 @@
 <?php
 
-require_once __DIR__ . "/../../Loader.php";
+require_once __DIR__ . "/../../../core/load.php";
 
 abstract class Model {
-    protected $DB;
-    protected $token;
+    protected string $_table_name;
+    protected $_fields;
 
-    public function __construct($token = false) {
-        $this->token = $token;
-        $loader = Loader::getInstance();
-        $db_connection = $loader->getDBCredentials();
-        if ( $this->DB = new PDO("mysql:host=" . $db_connection['host'] . ";dbname=" . $db_connection['database'] . "", $db_connection['user'], $db_connection['password'] ) ) {
-            return true;
+    function __construct( $properties = false ) {
+
+        $this->_table_name = helper()->plural_form( strtolower( get_called_class() ) );
+
+        if ( $properties == false ) {
+            $init_fields = SQL("SHOW COLUMNS FROM " . $this->_table_name);
+
+            foreach ( $init_fields as $field ) {
+                $this->init_property( $field['Field'] );
+                $this->_fields[] = $field['Field'];
+            }
         } else {
-            return false;
+            foreach ( $properties as $name => $field ) {
+                $this->init_property( $name, $field );
+                $this->_fields[] = $name;
+            }
         }
     }
 
-    public function getIdByToken() {
-        if( $result = $this->DB->query("SELECT `id` from `users` WHERE `access_token` = '" . $this->token . "'")->fetchAll(PDO::FETCH_ASSOC) ) {
-            return $result[0]['id'];
+    private function init_property($name, $value = null) {
+        $this->{$name} = $value;
+    }
+
+    public function save() {
+        if ( isset( $this->id ) && $this->id != null ) {
+            return SQL('UPDATE ' . $this->_table_name . ' SET ' . $this->generate_set_string() . ' WHERE id = ' . $this->id);
         } else {
-            return false;
+            return SQL('INSERT INTO ' . $this->_table_name . ' (' . $this->generate_fields_string() . ') VALUES (' . $this->generate_values_string() . ')');
         }
     }
 
-    public function isAdmin() {
-        if( $result = $this->DB->query('SELECT is_admin from users WHERE access_token = "' . $this->token . '"')->fetchAll(PDO::FETCH_ASSOC) ) {
-            return $result[0]['is_admin'];
-        } else {
-            return false;
-        }
+    private function generate_fields_string() {
+        return implode(', ', $this->_fields );
     }
 
-    public function SQL( $query, $result = "fetchAll(PDO::FETCH_ASSOC)" ) {
-        if( $result = $this->DB->query($query)->$result ) {
-            return $result;
-        } else {
-            return false;
+    private function generate_values_string() {
+        $values = '"';
+
+        foreach ( $this->_fields as $field ) {
+            $values .= $this->{$field} . '", "';
         }
+
+        return substr($values, 0, -4) . '"';
+    }
+
+    private function generate_set_string() {
+        $values = '';
+
+        foreach ( $this->_fields as $field ) {
+            $values .= '`' . $field . '` = "' . $this->{$field} . '", ';
+        }
+
+        return substr($values, 0, -2);
+    }
+
+    public static function get( $query = false ) {
+        $_table_name = helper()->plural_form( strtolower( get_called_class() ) );
+        $results = SQL('SELECT * FROM ' . $_table_name);
+
+        $objects = array();
+        $class = get_called_class();
+
+        foreach ( $results as $result ) {
+            $objects[] = new $class( $result );
+        }
+
+        return $objects;
     }
 
 }
