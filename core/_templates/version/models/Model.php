@@ -61,9 +61,9 @@ abstract class Model {
         return substr($values, 0, -2);
     }
 
-    public static function get( $query = false ) {
+    public static function get( $query = '1' ) {
         $_table_name = helper()->plural_form( strtolower( get_called_class() ) );
-        $results = SQL('SELECT * FROM ' . $_table_name);
+        $results = SQL('SELECT * FROM ' . $_table_name . " WHERE " . $query);
 
         $objects = array();
         $class = get_called_class();
